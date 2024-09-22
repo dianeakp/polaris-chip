@@ -1,7 +1,7 @@
 // we import JS code into this JS code. Modular javascript is a big deal
 // more modern (relatively speaking) and allows the web to feel like
 // a full blown development environment
-import { LitElement, html, css } from 'lit';
+import { LitElement, html, css } from "lit";
 
 // export means that other JS files can reference this JS file and
 // pull in this class
@@ -22,13 +22,15 @@ export class PolarisChip extends LitElement {
   // I glance and go "oh the HTML tag for this code is called polaris-chip"
   // see the very bottom of the file for where this is actually implemented
   static get tag() {
-    return 'polaris-chip';
+    return "polaris-chip";
   }
   // constructor establishes defaults for the class
   constructor() {
     super();
     // a variable on this object called title
-    this.title = 'Chip Default';
+    this.title = "Chip Default";
+    this.link = "#"; //means it'll stay on the same page and do nothing
+    this.shiny = false;
   }
 
   // CSS styles are scoped JUST to this element. This uses a technology called
@@ -39,7 +41,7 @@ export class PolarisChip extends LitElement {
     // "css" called here is actually a function exported from Lit at the top
     // so that it scopes the CSS nicely and also applies sanitization
     return css`
-    /*
+      /*
       :host is a special selector meaning "the tag itself"
       Think of if we were looking at how a <strong> tag is made. It would have
       :host { font-weight: bold; display: inline; }
@@ -49,7 +51,7 @@ export class PolarisChip extends LitElement {
         display: inline-flex;
       }
 
-      span {
+      a {
         background-color: orange;
         color: black;
         font-size: 24px;
@@ -57,7 +59,13 @@ export class PolarisChip extends LitElement {
         margin: 8px;
       }
 
-      span:hover {
+      :host([shiny]) a {
+        //the tag itself has shiny set, the [] means it's CSS
+        background-color: yellow;
+      }
+
+      a:focus,
+      a:hover {
         background-color: grey;
         border: 1px solid black;
       }
@@ -83,7 +91,7 @@ export class PolarisChip extends LitElement {
     // it is going to print the title of the element. The magic of Lit is that
     // when title is changed (even by inspecting the document and hacking the value)
     // it will automatically update what is displayed and do so incredibly quickly
-    return html`<span>${this.title}</span>`;
+    return html`<a href="${this.link}">${this.title}</a>`;
   }
 
   // LitElement uses the properties call to do the following:
@@ -95,6 +103,8 @@ export class PolarisChip extends LitElement {
     return {
       // this is a String. Array, Object, Number, Boolean are other valid values here
       title: { type: String },
+      link: { type: String },
+      shiny: { type: Boolean, reflect: true },
     };
   }
 }
