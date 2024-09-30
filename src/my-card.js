@@ -19,12 +19,20 @@ export class MyCard extends LitElement {
       "Tune into Charli XCX's newest album! It's been named the Album of the Summer!";
     this.image =
       "https://upload.wikimedia.org/wikipedia/commons/6/60/Charli_XCX_-_Brat_%28album_cover%29.png";
+    this.fancy = false;
   }
 
   static get styles() {
     return css`
       div {
         justify-content: center;
+      }
+
+      :host([fancy]) {
+        display: block;
+        background-color: pink;
+        border: 2px solid fuchsia;
+        box-shadow: 10px 5px 5px red;
       }
 
       #card-container {
@@ -186,9 +194,16 @@ export class MyCard extends LitElement {
         <img class= "picture" src= ${this.image} alt = "Charli XCX brat cover"
         style: width=400px;>
         <br />
-        <h1 class="cardtitle">${this.name}</h1>
+        <h1 class="cardtitle"><slot name="cardtitle">${this.name}</slot></h1>
         <br />
-        <p class="txt">${this.description}</p>
+        <!-- <p class="txt"><slot name="txt">${this.description}</slot></p> -->
+        <details ?open="${this.fancy}" @toggle="${this.openChanged}">
+          <summary>Description</summary>
+          <div>
+            <slot>${this.description}</slot>
+          </div>
+        </details>
+
         <br />
         <a href="https://open.spotify.com/album/2lIZef4lzdvZkiiCzvPKj7">
           <button class="abtn"><b>Listen Now!</b></button>
@@ -203,12 +218,22 @@ export class MyCard extends LitElement {
     </div>`;
   }
 
+  openChanged(e) {
+    console.log(e);
+    if (e.target.getAttribute("open") !== null) {
+      this.fancy = true;
+    } else {
+      this.fancy = false;
+    }
+  }
+
   static get properties() {
     return {
       name: { type: String },
       title: { type: String },
       description: { type: String },
       image: { type: String },
+      fancy: { type: Boolean, reflect: true },
     };
   }
 }
